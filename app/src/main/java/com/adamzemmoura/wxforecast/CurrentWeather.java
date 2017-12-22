@@ -1,6 +1,10 @@
 package com.adamzemmoura.wxforecast;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class CurrentWeather {
 
     private String icon;
@@ -9,6 +13,15 @@ public class CurrentWeather {
     private double humidity;
     private double precipChance;
     private String summary;
+    private String timezone;
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
 
     public String getIcon() {
         return icon;
@@ -20,6 +33,12 @@ public class CurrentWeather {
 
     public long getTime() {
         return time;
+    }
+
+    public String getFormattedTime() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+        formatter.setTimeZone(TimeZone.getTimeZone(timezone));
+        return formatter.format(new Date(time * 1000));
     }
 
     public void setTime(long time) {
@@ -58,7 +77,8 @@ public class CurrentWeather {
         this.summary = summary;
     }
 
-    public CurrentWeather(String icon, long time, double temperature, double humidity, double precipChance) {
+    public CurrentWeather(String timezone, String icon, long time, double temperature, double humidity, double precipChance) {
+        this.timezone = timezone;
         this.icon = icon;
         this.time = time;
         this.temperature = temperature;

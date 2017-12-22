@@ -85,12 +85,16 @@ public class MainActivity extends AppCompatActivity {
         JSONObject forecast = new JSONObject(jsonData);
         JSONObject currently = forecast.getJSONObject("currently");
         String icon = currently.getString("icon");
+        String timezone = forecast.getString("timezone");
         long time = currently.getLong("time");
         double temperature = currently.getDouble("temperature");
         double precipChance = currently.getDouble("precipProbability");
         double humidity = currently.getDouble("humidity");
 
-        return new CurrentWeather(icon, time, temperature, humidity, precipChance);
+        CurrentWeather weather =  new CurrentWeather(timezone, icon, time, temperature, humidity, precipChance);
+        Log.d(TAG, "DATE TIME :" + weather.getFormattedTime());
+
+        return weather;
 
     }
 
