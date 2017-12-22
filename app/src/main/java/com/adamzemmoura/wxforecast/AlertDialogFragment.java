@@ -12,7 +12,7 @@ public class AlertDialogFragment extends DialogFragment {
     private AlertType type = AlertType.Generic_Error;
 
     enum AlertType {
-        Generic_Error, No_Network_Error
+        Generic_Error, No_Network_Error, JSON_Parsing_Error
     }
 
     @Override
@@ -26,6 +26,8 @@ public class AlertDialogFragment extends DialogFragment {
             case No_Network_Error:
                 builder.setMessage(R.string.network_unavailable_message);
                 break;
+            case JSON_Parsing_Error:
+                builder.setMessage(R.string.json_parsing_error_message);
             default:
                 builder.setMessage(R.string.error_message);
         }

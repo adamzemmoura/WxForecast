@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
@@ -22,6 +25,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private CurrentWeather mCurrentWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +57,19 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     try {
-                        Log.v(TAG, response.body().string());
+                        String jsonData = response.body().string();
+                        Log.v(TAG, jsonData);
                         if (response.isSuccessful()) {
-
+                            mCurrentWeather = getCurrentDetails(jsonData);
                         } else {
                             alertUserAboutError(null);
                         }
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e) {
                         Log.e(TAG, "Exception caught : ", e);
+                    }
+                    catch (JSONException e) {
+                        alertUserAboutError(AlertDialogFragment.AlertType.JSON_Parsing_Error);
                     }
                 }
             });
@@ -68,6 +77,20 @@ public class MainActivity extends AppCompatActivity {
             alertUserAboutError(AlertDialogFragment.AlertType.No_Network_Error);
         }
 
+
+    }
+
+    private CurrentWeather getCurrentDetails(String jsonData) throws JSONException {
+
+        JSONObject forecast = new JSONObject(jsonData);
+        JSONObject currently = forecast.getJSONObject("currently");
+        String icon = currently.getString("icon");
+        long time = currently.getLong("time");
+        double temperature = currently.getDouble("temperature");
+        double precipChance = currently.getDouble("precipProbability");
+        double humidity = currently.getDouble("humidity");
+
+        return new CurrentWeather(icon, time, temperature, humidity, precipChance);
 
     }
 
